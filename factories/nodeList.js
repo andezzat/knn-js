@@ -1,5 +1,6 @@
 const _ = require('lodash');
 
+const createNode = require('./node');
 
 const calculateRanges = (nodes, features) => {
 		return features.reduce((obj, f) => {
@@ -14,7 +15,7 @@ const calculateRanges = (nodes, features) => {
 	},
 
 	const createNodeList = (nodesIn = []) => {
-		let nodes = [...nodesIn];
+		let nodes = nodesIn.map(node => createNode(node));
 		const features = nodes.find(node => node.isKnown).features;
 		let ranges = calculateRanges(nodes, features);
 

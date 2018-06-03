@@ -1,5 +1,5 @@
-const createNodeSet = (k, nodeListIn = createNodeList([])) => {
-	const nodeList = Object.clone(nodeListIn);
+const createNodeSet = (nodesIn = [], missingFeature) => {
+	const nodeList = createNodeList(nodesIn);
 	return {
 		k,
 		nodeList,
@@ -7,7 +7,7 @@ const createNodeSet = (k, nodeListIn = createNodeList([])) => {
 			nodeList.add(...nodes);
 			return this;
 		},
-		determineUnknown(missingFeature, k) {
+		determineUnknown(k) {
 			nodeList
 				.cloneAsNeighbours()
 				.normalizeFeatures()
