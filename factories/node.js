@@ -16,3 +16,5 @@ const createNode = (node, isKnown = true) => {
 		},
 	};
 };
+
+module.exports = createNode;

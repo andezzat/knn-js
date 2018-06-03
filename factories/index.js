@@ -1,9 +1,9 @@
-const node = require('./node');
-const nodeList = require('./nodeList');
-const nodeSet = require('./nodeSet');
+const createNode = require('./node');
+const createNodeList = require('./nodeList');
+const createNodeSet = require('./nodeSet');
 
-modules.export = {
-	node,
-	nodeList,
-	nodeSet,
+module.exports = {
+	createNode,
+	createNodeList,
+	createNodeSet,
 };
