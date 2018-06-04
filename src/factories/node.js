@@ -1,3 +1,6 @@
+const _ = require('lodash');
+
+
 const createNode = (node, isKnown = true) => {
 	const features = Object.keys(node);
 	return {

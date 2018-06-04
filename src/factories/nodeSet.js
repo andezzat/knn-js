@@ -10,8 +10,8 @@ const createNodeSet = (nodesIn = [], missingFeature) => {
     },
 		determineUnknown(k) {
 			nodeList
+        .normalizeFeatures()
 				.cloneAsNeighbours()
-				.normalizeFeatures()
 				.measureDistances()
 				.sortNeighbours()
 				.populateMissingFeatures(missingFeature, k);

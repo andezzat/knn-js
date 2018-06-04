@@ -35,12 +35,16 @@ const nodes = [
 ];
 
 const nodeSet = createNodeSet(nodes, 'type');
-const unknownNodes = [{ rooms: 4, area: 420 }]; // apartment
+const unknownNodes = [
+  { rooms: 4, area: 420 }, // apartment
+];
 nodeSet.add(unknownNodes, false); 
 
 nodeSet.determineUnknown();
 
-console.log(nodeSet.nodeList.nodes.find(node => node.area === 420));
+const newUnknownNodes = nodeSet.nodeList.nodes.filter(node => !node.isKnown);
+
+console.log(newUnknownNodes.map(n => n.type));
 
 // 1. calculate ranges (min & max of all features [props of objects in array] in set)
 // 2. find all unknown points
