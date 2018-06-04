@@ -14,18 +14,26 @@ const calculateRanges = (nodes, features) => {
 	}, {});
 };
 
+const findMissingFeature = (nodes) => {
+  const knownFeatures = nodes.find(node => node.isKnown).features;
+  const allFeatures = nodes.find(node => !node.isKnown).features;
+  return _.xor(knownFeatures, allFeatures);
+};
+
 const createNodeList = (nodesIn = []) => {
-	let nodes = nodesIn.map(node => createNode(node));
-	const features = nodes.find(node => node.isKnown).features;
+  let nodes = nodesIn.map(node => createNode(node));
+  const features = nodes.find(node => node.isKnown).features;
+  const missingFeature = findMissingFeature(nodes);
+
 	let ranges = calculateRanges(nodes, features);
 
 	return {
 		features,
-		add(...nodesToPush) {
-			nodes.push(...nodesToPush);
+		add(nodesToPush, known) {
+			nodes.push(...nodesToPush.map(node => createNode(node, known)));
 			ranges = calculateRanges(nodes, features);
 			return this;
-		},
+    },
 		/**
 		 * Clone all known nodes as neighbours for each unknown node
 		 */
@@ -40,7 +48,13 @@ const createNodeList = (nodesIn = []) => {
 			return this;
 		},
 		normalizeFeatures() {
-			nodes = nodes.map(node => features.reduce((obj, f) => ({ ...obj, [f]: node[f] / ranges[f].range })));
+			nodes = nodes.map(node => features.reduce((obj, f) => {
+        const newFeature = f === missingFeature
+          ? node[f]
+          : (node[f] - ranges[f].min) / ranges[f].range;
+
+        return { ...obj, [f]: newFeature };
+      }, {}));
 			return this;
 		},
 		measureDistances() {

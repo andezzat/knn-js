@@ -2,8 +2,7 @@ require('./lib/extensions')();
 
 const { createNodeSet } = require('./factories');
 
-
-const createNode = ({ rooms, area, type }) => ({
+const createNode = (rooms, area, type) => ({
 	rooms,
 	area,
 	type,
@@ -35,9 +34,9 @@ const nodes = [
 	createNode(5, 450, 'apartment'),
 ];
 
-nodes.push({ rooms: 4, area: 420 }); // apartment
-
 const nodeSet = createNodeSet(nodes, 'type');
+const unknownNodes = [{ rooms: 4, area: 420 }]; // apartment
+nodeSet.add(unknownNodes, false); 
 
 nodeSet.determineUnknown();
 
