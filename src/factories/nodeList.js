@@ -36,7 +36,7 @@ const createNodeList = (nodesIn = []) => {
     },
 		features,
 		add(nodesToPush, known) {
-			nodes.push(...nodesToPush.map(node => createNode(node, known)));
+			nodes = [ ...nodes, ...nodesToPush.map(node => createNode(node, known))];
 			ranges = calculateRanges(nodes, features);
 			return this;
     },
@@ -54,13 +54,7 @@ const createNodeList = (nodesIn = []) => {
 			return this;
 		},
 		normalizeFeatures() {
-			nodes = nodes.map(node => features.reduce((obj, f) => {
-        const newFeature = ranges[f]
-          ? (node[f] - ranges[f].min) / ranges[f].range
-          : node[f];
-
-        return { ...obj, [f]: newFeature };
-      }, node));
+			nodes = nodes.map(node => node.normalizeFeatures(ranges));
 			return this;
 		},
 		measureDistances() {
@@ -75,12 +69,13 @@ const createNodeList = (nodesIn = []) => {
 			return this;
 		},
 		sortNeighbours() {
-      nodes
+      nodes = nodes
         .filter(node => !node.isKnown)
-        .forEach(node => node.sortNeighbours());
+        .map(node => node.sortNeighbours());
 			return this;
 		},
 		populateMissingFeatures(missingFeature, k = 3) {
+      const knownNodes = nodes.filter(node => node.isKnown);
 			const newUnknownNodes = nodes
 				.filter(node => !node.isKnown)
 				.mapFor(missingFeature, (m, node) => {
@@ -92,7 +87,6 @@ const createNodeList = (nodesIn = []) => {
 						.value()[0][0][missingFeature];
         });
       
-      const knownNodes = nodes.filter(node => node.isKnown);
       nodes = [ ...knownNodes, ...newUnknownNodes ];
 
       return this;

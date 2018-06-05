@@ -5,7 +5,8 @@ const createNode = (node, isKnown = true) => {
 	const features = Object.keys(node);
 	return {
 		...node,
-		features,
+    features,
+    normalized: {},
 		isKnown,
 		calculateDistance(otherNode) {
 			return Math.sqrt(features.reduce((acc, feature) => {
@@ -14,9 +15,22 @@ const createNode = (node, isKnown = true) => {
 				return acc + distanceSq
 			}, 0));
 		},
-		sortNeighbours() {
-			this.neighbours = _.sortBy(this.neighbours, 'distance');
-		},
+		sortNeighbours(by = 'distance') {
+      const neighbours = _.sortBy(this.neighbours, by);
+      return { ...this, neighbours };
+    },
+    normalizeFeatures(ranges) {
+      const normalized = Object.keys(this)
+        .filter(f => features.includes(f))
+        .reduce((obj, f) => {
+          if (!ranges[f]) return obj;
+
+          const newFeature = (this[f] - ranges[f].min) / ranges[f].range;
+          return { ...obj, [f]: newFeature };
+        }, {});
+
+      return { ...this, normalized };
+    },
 	};
 };
 
