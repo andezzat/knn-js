@@ -10,7 +10,7 @@ const createNode = (node, isKnown = true) => {
 		isKnown,
 		calculateDistance(otherNode) {
 			return Math.sqrt(features.reduce((acc, feature) => {
-				const distance = Math.abs(this[feature] - otherNode[feature]);
+				const distance = Math.abs(this.normalized[feature] - otherNode.normalized[feature]);
 				const distanceSq = distance * distance;
 				return acc + distanceSq
 			}, 0));

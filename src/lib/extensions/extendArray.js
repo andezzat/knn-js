@@ -22,8 +22,11 @@ const arrayExtensions = {
       .map(x => x[prop])
       .forEach(val => tally[val] ? tally[val]++ : tally[val] = 1);
     
-    const max = Math.max(Object.values(tally));
-    return tally.find(val => val === max);
+		const values = Object.keys(tally);
+		const tallies = Object.values(tally);
+		const maxTallyIndex = tallies.indexOf(Math.max(tallies));
+
+		return values[maxTallyIndex];
   }
 };
 

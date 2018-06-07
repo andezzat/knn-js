@@ -32,7 +32,7 @@ const createNodeList = (nodesIn = []) => {
 
 	return {
     get nodes() {
-      return nodes
+      return nodes;
     },
 		features,
 		add(nodesToPush, known) {
@@ -78,14 +78,10 @@ const createNodeList = (nodesIn = []) => {
       const knownNodes = nodes.filter(node => node.isKnown);
 			const newUnknownNodes = nodes
 				.filter(node => !node.isKnown)
-				.mapFor(missingFeature, (m, node) => {
-					const kNearestNeighbours = node.neighbours.slice(0, k);
-					return _.chain(kNearestNeighbours)
-						.groupBy(missingFeature)
-						.sortBy(group => group.length)
-						.reverse()
-						.value()[0][0][missingFeature];
-        });
+				.mapFor(missingFeature, (m, node) =>
+					node.neighbours
+						.slice(0, k)
+						.mostCommon(missingFeature));
       
       nodes = [ ...knownNodes, ...newUnknownNodes ];
 
