@@ -1,4 +1,6 @@
 const createNodeList = require('./nodeList');
+// const { createTimer, pipe } = require('../lib/utils');
+
 
 const createNodeSet = (nodesIn = [], missingFeature) => {
 	const nodeList = createNodeList(nodesIn);
@@ -10,7 +12,7 @@ const createNodeSet = (nodesIn = [], missingFeature) => {
     },
 		determineUnknown(k) {
 			nodeList
-        .normalizeFeatures()
+				.normalizeFeatures()
 				.cloneAsNeighbours()
 				.measureDistances()
 				.sortNeighbours()

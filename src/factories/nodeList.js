@@ -35,6 +35,7 @@ const createNodeList = (nodesIn = []) => {
       return nodes;
     },
 		features,
+		ranges,
 		add(nodesToPush, known) {
 			nodes = [ ...nodes, ...nodesToPush.map(node => createNode(node, known))];
 			ranges = calculateRanges(nodes, features);
@@ -69,24 +70,28 @@ const createNodeList = (nodesIn = []) => {
 			return this;
 		},
 		sortNeighbours() {
-      nodes = nodes
-        .filter(node => !node.isKnown)
-        .map(node => node.sortNeighbours());
+			const unknownNodes = nodes
+			.filter(node => !node.isKnown)
+			.map(node => node.sortNeighbours());
+			
+			const knownNodes = nodes.filter(node => node.isKnown);
+			nodes = [...knownNodes, ...unknownNodes];
+			
 			return this;
 		},
 		populateMissingFeatures(missingFeature, k = 3) {
-      const knownNodes = nodes.filter(node => node.isKnown);
+			const knownNodes = nodes.filter(node => node.isKnown);
 			const newUnknownNodes = nodes
 				.filter(node => !node.isKnown)
 				.mapFor(missingFeature, (m, node) =>
 					node.neighbours
 						.slice(0, k)
 						.mostCommon(missingFeature));
-      
-      nodes = [ ...knownNodes, ...newUnknownNodes ];
+			
+			nodes = [ ...knownNodes, ...newUnknownNodes ];
 
-      return this;
-		}
+			return this;
+		},
 	};
 };
 
