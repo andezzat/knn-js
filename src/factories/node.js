@@ -2,20 +2,20 @@ const _ = require('lodash');
 
 
 const createNode = (node, isKnown = true) => {
-	const features = Object.keys(node);
-	return {
-		...node,
+  const features = Object.keys(node);
+  return {
+    ...node,
     features,
     normalized: {},
-		isKnown,
-		calculateDistance(otherNode) {
-			return Math.sqrt(features.reduce((acc, feature) => {
-				const distance = Math.abs(this.normalized[feature] - otherNode.normalized[feature]);
-				const distanceSq = distance * distance;
-				return acc + distanceSq
-			}, 0));
-		},
-		sortNeighbours(by = 'distance') {
+    isKnown,
+    calculateDistance(otherNode) {
+      return Math.sqrt(features.reduce((acc, feature) => {
+        const distance = Math.abs(this.normalized[feature] - otherNode.normalized[feature]);
+        const distanceSq = distance * distance;
+        return acc + distanceSq
+      }, 0));
+    },
+    sortNeighbours(by = 'distance') {
       const neighbours = _.sortBy(this.neighbours, by);
       return { ...this, neighbours };
     },
@@ -31,7 +31,7 @@ const createNode = (node, isKnown = true) => {
 
       return { ...this, normalized };
     },
-	};
+  };
 };
 
 module.exports = createNode;

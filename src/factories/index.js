@@ -3,7 +3,7 @@ const createNodeList = require('./nodeList');
 const createNodeSet = require('./nodeSet');
 
 module.exports = {
-	createNode,
-	createNodeList,
-	createNodeSet,
+  createNode,
+  createNodeList,
+  createNodeSet,
 };

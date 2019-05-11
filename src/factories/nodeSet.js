@@ -3,22 +3,22 @@ const createNodeList = require('./nodeList');
 
 
 const createNodeSet = (nodesIn = [], missingFeature) => {
-	const nodeList = createNodeList(nodesIn);
-	return {
-		nodeList,
-		add(nodes, known) {
-			nodeList.add(nodes, known);
-			return this;
+  const nodeList = createNodeList(nodesIn);
+  return {
+    nodeList,
+    add(nodes, known) {
+      nodeList.add(nodes, known);
+      return this;
     },
-		determineUnknown(k) {
-			nodeList
-				.normalizeFeatures()
-				.cloneAsNeighbours()
-				.measureDistances()
-				.sortNeighbours()
-				.populateMissingFeatures(missingFeature, k);
-		},
-	};
+    determineUnknown(k) {
+      nodeList
+        .normalizeFeatures()
+        .cloneAsNeighbours()
+        .measureDistances()
+        .sortNeighbours()
+        .populateMissingFeatures(missingFeature, k);
+    },
+  };
 }
 
 module.exports = createNodeSet;
