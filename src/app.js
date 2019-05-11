@@ -6,35 +6,30 @@ const _ = require('lodash');
 const app = express();
 
 app.use(express.static('public'));
+app.use(express.json());
 
-app.get('/nodes', (req, res, next) => {
-	const { createNodeSet } = require('./factories');
-	const sampleNodes = require('./sampleNodes');
-	const missingFeature = 'type';
-	const k = 3;
+app.post('/nodes', (req, res, next) => {
+  const { createNodeSet } = require('./factories');
+  const { missingFeature, k } = req.body;
 
-	const nodeSet = createNodeSet(sampleNodes, missingFeature);
-	const unknownNodes = [
-		{ rooms: 4, area: 420 }, // apartment
-	];
-	nodeSet.add(unknownNodes, false); 
-	nodeSet.determineUnknown(k);
+  const nodeSet = createNodeSet(req.body.nodes, missingFeature);
+  nodeSet.determineUnknown(k);
 
-	let nodes = nodeSet.nodeList.nodes;
+  let nodes = nodeSet.nodeList.nodes;
 
-	let colours = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta', 'purple', 'orange'];
-	const types = Object.keys(_.groupBy(nodeSet.nodeList.nodes, node => node[missingFeature]));
-	colours = types.reduce((obj, t) => {
-		let index = 0;
-		while (Object.values(obj).includes(colours[index])) index = Math.floor(Math.random() * (colours.length - 1)) + 1;
-		return { ...obj, [t]: colours[index] };
-	}, {});
+  let colours = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta', 'purple', 'orange'];
+  const types = Object.keys(_.groupBy(nodeSet.nodeList.nodes, node => node[missingFeature]));
+  colours = types.reduce((obj, t) => {
+    let index = 0;
+    while (Object.values(obj).includes(colours[index])) index = Math.floor(Math.random() * (colours.length - 1)) + 1;
+    return { ...obj, [t]: colours[index] };
+  }, {});
 
-	nodes = nodes.mapFor('colour', (c, node) => colours[node[missingFeature]]);
-	const ranges = nodeSet.nodeList.ranges;
-	res.send({ nodes, ranges });
+  nodes = nodes.mapFor('colour', (c, node) => colours[node[missingFeature]]);
+  const ranges = nodeSet.nodeList.ranges;
+  res.send({ nodes, ranges });
 
-	console.log(`Sent nodes to: ${req.hostname}`);
+  console.log(`Sent nodes to: ${req.hostname}`);
 });
 
 
